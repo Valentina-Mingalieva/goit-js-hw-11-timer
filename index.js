@@ -1,26 +1,25 @@
-const refs = {
+/* const refs = {
     // timerEl: document.querySelector('#timer-1'),
     days: document.querySelector('[data-value="days"]'),
     hours: document.querySelector('[data-value="hours"]'),
     mins: document.querySelector('[data-value="mins"]'),
     secs: document.querySelector('[data-value="secs"]'),
-}
+} */
 
 class CountdownTimer {
     constructor({onTick}) {
         this.intervalId = null;
         this.onTick = onTick;
+        this.targetDate = targetDate;
     }
 
     start() { 
         this.intervalId = setInterval(() => {
-            // const targetDate = new Date('Jul 17, 2021');
             const currentTime = Date.now();
-            const time = targetDate - currentTime;
+            const time = this.targetDate - currentTime;
             const { days, hours, mins, secs } = getTimeComponents(time);
             
             this.onTick(time);
-            console.log(`${days}: ${hours}: ${mins}: ${secs}`);
         }, 1000);
     }
 
@@ -54,8 +53,6 @@ function updateClockFace({ days, hours, mins, secs }) {
 }
 
 countdownTimer.start();
-
-
 
 /* Оставшиеся дни: делим значение UTC на 1000 * 60 * 60 * 24, количество
  * миллисекунд в одном дне (миллисекунды * секунды * минуты * часы) */
