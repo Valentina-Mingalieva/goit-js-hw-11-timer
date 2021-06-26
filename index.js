@@ -1,25 +1,26 @@
-/* const refs = {
-    // timerEl: document.querySelector('#timer-1'),
+const refs = {
+    timerEl: document.querySelector('#timer-1'),
     days: document.querySelector('[data-value="days"]'),
     hours: document.querySelector('[data-value="hours"]'),
     mins: document.querySelector('[data-value="mins"]'),
     secs: document.querySelector('[data-value="secs"]'),
-} */
+}
 
 class CountdownTimer {
-    constructor({onTick}) {
-        this.intervalId = null;
+    constructor({onTick, selector, targetDate}) {
         this.onTick = onTick;
+        this.selector = selector;
         this.targetDate = targetDate;
     }
 
     start() { 
-        this.intervalId = setInterval(() => {
+        this.timer = setInterval(() => {
             const currentTime = Date.now();
             const time = this.targetDate - currentTime;
-            const { days, hours, mins, secs } = getTimeComponents(time);
+            const { days, hours, mins, secs } = this.getTimeComponents(time);
             
-            this.onTick(time);
+            updateClockFace({ days, hours, mins, secs });
+            this.stopTimer(time);
         }, 1000);
     }
 
@@ -37,12 +38,19 @@ class CountdownTimer {
     pad(value) {
         return String(value).padStart(2, '0');
     }
+
+    stopTimer(time) {
+        if (time <= 0) {
+            clearInterval(this.timer);
+            timer.textContent = 'Deadline passed!';
+        }
+    }
 }
 
 const countdownTimer = new CountdownTimer({
+    onTick: updateClockFace,
     selector: '#timer-1',
     targetDate: new Date('Jul 17, 2021'),
-    onTick: updateClockFace(),
 });
 
 function updateClockFace({ days, hours, mins, secs }) {
